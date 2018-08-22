@@ -16,4 +16,4 @@ In Logistic Regression, we use the same equation but with some modifications mad
  The right side of the (immediate) equation above depicts the linear combination of independent variables. The left side is known as the log - odds or odds ratio or logit function and is the link function for Logistic Regression. 
  
  # Loan Prediction
- I have built a Logistic Regression model on a dataset containing varied information about 5000 people and trying to predict whether a person will accept a loan or not depending on his/her income.
+ I have built a Logistic Regression model on a dataset containing- age,income,experience,family and other information about 5000 people and  trying to predict whether a person will accept a loan or not depending on the information provided in the dataset.
