@@ -7,11 +7,13 @@ For Linear Regression, where the output is a linear combination of input feature
             Y = βo + β1X + ∈     ,where Y is dependent variable, X is independent variable βo is the intercept and β1 is the coefficient and ∈ is the error term. 
 In Logistic Regression, we use the same equation but with some modifications made to Y.Since  in logistic regression we try to calculate the probabilities and probabilities always lie between 0 and 1,as a result our response variable must be positive and lower than 1.
  As we know the exponential of any value is always a positive number. And, any number divided by number + 1 will always be lower than 1.
- so [put logit function image here].
+ so 
+ ![put logit function image here](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/logit%20function.PNG)
  
  Now the probability value will always lie between 0 and 1. To determine the link function,we do the following calculations. P(Y=1|X) can be read as "probability that Y =1 given some value for x." Y can take only two values, 1 or 0.let's rewrite P(Y=1|X) as p(X).
  Hence we get the following link function:
- [put link equation image here]
+
+![put link equation image here](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/link%20equation.PNG)
  
  The right side of the (immediate) equation above depicts the linear combination of independent variables. The left side is known as the log - odds or odds ratio or logit function and is the link function for Logistic Regression. 
  
