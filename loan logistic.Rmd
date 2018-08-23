@@ -10,7 +10,7 @@ head(loan)
 ```{r}
 summary(loan)
 ```
-[put image of summary of loan]
+![put image of summary of loan](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/summary%20of%20loan.PNG)
 
 From the summary it is clearly understood that the average age of the customers in our
 dataset is 45 years and the min and max age are 23 yrs and 67 yrs respectively. If we now
@@ -26,14 +26,15 @@ dataset
 ```{r}
 summary(loan)
 ```
-[put image of summary of loan experience]
+![put image of summary of loan experience](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/summary%20of%20loan%20experience.PNG)
 
 We would now plot the Income variable to see how the data is diustributed,
 
 ```{r}
 hist(loan$Income)
 ```
-[put image of loan income]
+![put image of loan income](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/image%20of%20loan%20income.png)
+
 It is clearly visible that income is positively skewed from the plot.
 
 Since our objective is to see if a new customer would accept a personal loan or not, we would
@@ -44,7 +45,7 @@ loannew=loan
 t=loannew[,'PersonalLoan']==1
 table(t)
 ```
-[put image of true false table]
+![put image of true false table](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/true%20false%20table.PNG)
 
 From the above table we can see that there are 473 customers had accepted personal loan
 given out of 4409 customers.
@@ -55,12 +56,13 @@ personal loan.
 classone =loannew[t,]
 nrow(classone)
 ```
-[put image of nrow]
+![put image of nrow](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/nrow%20image.PNG)
+
 ```{r}
 classzero =loannew[!t,]
 nrow(classzero)
 ```
-[put image of nrow classzero]
+![put image of nrow classzero](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/image%20of%20nrow%20classzero.PNG)
 
 As can been seen from the above results the data is not equally distributed between classone
 and classzero i.e. there are more customers who have not taken a personal loan compared
@@ -83,7 +85,7 @@ set.seed(222)
 t=sample(1:nrow(classone),floor(0.5*nrow(classone)))
 length(t)
 ```
-[image of length of t1]
+![image of length of t1](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/length%20t1.PNG)
 
 ```{r}
 classone_train=classone[t,]
@@ -94,7 +96,8 @@ set.seed(222)
 t=sample(1:nrow(classzero),floor(0.5*nrow(classzero)))
 length(t)
 ```
-[image of t2]
+![image of t2](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/length%20t2.PNG)
+
 ```{r}
 classzero_train=classzero[t,]
 classzero_test=classzero[-t,]
@@ -107,7 +110,7 @@ split for dependent variable i.e. Personal Loan.
 PlIndex=which(names(loan) %in% "PersonalLoan")
 PlIndex
 ```
-[put image of plindex]
+![put image of plindex](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/plindex.PNG)
 
 ```{r}
 Xtrain=rbind(classone_train[,-PlIndex],classzero_train[,-PlIndex])
@@ -123,7 +126,7 @@ with family="binomial". We would consider all the categorical variables as facto
 Mod=glm(ytrain~Age+Experience+Income+as.factor(Family)+CCAvg+as.factor(Education)+Mortgage+as.factor(SecuritiesAccount)+as.factor(CDAccount)+as.factor(Online)+as.factor(CreditCard),family=binomial,data=data.frame(Xtrain))
 summary(Mod)
 ```
-[put mod summary image]
+![put mod summary image](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/mod%20summary%20image.PNG)
 
 From the model we can see that the variables Age, Experience and Mortgage are not
 significant (since there are no stars displayed for these variables). We would remove these
@@ -134,7 +137,7 @@ Mod1=glm(ytrain~Income+as.factor(Family)+CCAvg+as.factor(Education)+as.factor(Se
 sury=summary(Mod1)
 sury
 ```
-[put mod1 summary image]
+![put mod1 summary image](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/mod1%20summary%20image.PNG)
 
 Now all the variables except as.Factor(Family2) in our model are significant and we cannot remove the `family` term in our model because the other parts of the family are significant. and hence we can go ahead with the next
 steps. A few checks before we go ahead with next steps is to see for how our residuals are.
@@ -152,7 +155,7 @@ ratio which is more meaningful in interpreting.
 IncomeEst=sury$coefficients["Income","Estimate"]
 (exp(IncomeEst)-1)*100
 ```
-[put exp image]
+![put exp image](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/error%20image.PNG)
 
 For every unit increase in income the odds ratio i.e. the chances of taking the loan to not
 taking the loan increases by 6.47%. But in logistic the model performance is decided based
@@ -167,25 +170,26 @@ classify=floor(PredTest+0.5)
 ClassifyTable=table(ytest,classify)
 ClassifyTable
 ```
-[put classify image]
+![put classify image]()https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/classify%20table.PNG
 ```{r}
 classify1=floor(PredTest+0.6)
 ClassifyTable1=table(ytest,classify)
 ClassifyTable1
 ```
-[put classify1 image]
+![put classify1 image](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/classify1.PNG)
 ```
 ```{r}
 classify2=floor(PredTest+0.4)
 ClassifyTable2=table(ytest,classify)
 ClassifyTable2
 ```
-[put classify2 image]
+![put classify2 image](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/classify2.PNG)
 ```{r}
 error=(ClassifyTable[1,2]+ClassifyTable[2,1])/length(PredTest)
 error*100
 ```
-[put original error image]
+![put original error image](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/original%20error.PNG)
+
 The classifiation table (ClassifyTable) indicates that most of the classifications have been
 done properly and the error shows that there is 4.4% error in our model i.e 4.4% of
 missclassification.
@@ -194,12 +198,13 @@ missclassification.
 install.packages("pscl")
 pR2(Mod1)
 ```
-[pR2 image]
+![pR2 image](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/pR2%20image.PNG)
 
 The Mc-Fadded R2 suggests that the independent variables are able to explain abour
 71.20% of the dependent variable.
 The next diagnostic to check is the ROC curve. This curve helps us in understanding how
 well our model is performing for each cut-off threshold.
+
 ```{r}
 install.packages("ROCR")
 library(ROCR)
@@ -208,7 +213,8 @@ pr<-prediction(PredTest,ytest)
 prf<-performance(pr,measure="tpr",x.measure="fpr")
 plot(prf)
 ```
-[ROC image]
+![ROC image](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/ROC.png)
+
 In the ROC, the curve should be as close as possible to the y-axis i.e to the sensitivity. This
 indicates that sensitivity is high and sprcificity is low. In our model the curve is close to the
 y-axis indicating that our model is good and would be perform well on a new dataset
