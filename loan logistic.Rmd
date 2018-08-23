@@ -24,7 +24,7 @@ loan<-loan[loan$Experience>0,]
 Now check for the summary of "Experience" to see if our changes have been affected on the
 dataset
 ```{r}
-summary(loan)
+summary(loan$Experience)
 ```
 ![put image of summary of loan experience](https://github.com/venusrohilla/Loan-Prediction-using-Logistic-Regression/blob/master/plots/summary%20of%20loan%20experience.PNG)
 
