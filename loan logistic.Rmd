@@ -1,101 +1,214 @@
----
-output:
-  html_document: default
-  pdf_document: default
----
+#### Loading Data
 ```{r}
 getwd()
 loan<-read.csv("loan.csv")
-summary(loan)
 ```
 ```{r}
 head(loan)
 ```
+#### Its always good to look at the summary of the dataset to understand how our data is distributed.
 ```{r}
-loan<-loan[loan$Experience>0,]
 summary(loan)
 ```
+[put image of summary of loan]
+
+From the summary it is clearly understood that the average age of the customers in our
+dataset is 45 years and the min and max age are 23 yrs and 67 yrs respectively. If we now
+look at variable "Experience" we can see that there are some negative values in it. It would
+not make sense to keep negative values of experience. So we need to remove these data
+points
+
+```{r}
+loan<-loan[loan$Experience>0,]
+```
+Now check for the summary of "Experience" to see if our changes have been affected on the
+dataset
+```{r}
+summary(loan)
+```
+[put image of summary of loan experience]
+
+We would now plot the Income variable to see how the data is diustributed,
+
 ```{r}
 hist(loan$Income)
 ```
-#here we have to find whether accepted loan or not and that outcome is in 0 or 1
-#have to find how many are 0 or 1.
+[put image of loan income]
+It is clearly visible that income is positively skewed from the plot.
+
+Since our objective is to see if a new customer would accept a personal loan or not, we would
+consider the variable "PersonalLoan" as our dependent variable for our model. Below is a
+table of how the variable is distributed.
 ```{r}
 loannew=loan
 t=loannew[,'PersonalLoan']==1
 table(t)
 ```
+[put image of true false table]
+
+From the above table we can see that there are 473 customers had accepted personal loan
+given out of 4409 customers.
+We create two variables "classone" which consists of all the customers who have been given
+a personal loan and "classzero" consists of all the customers who have not been given a
+personal loan.
+```{r}
+classone =loannew[t,]
+nrow(classone)
+```
+[put image of nrow]
+```{r}
+classzero =loannew[!t,]
+nrow(classzero)
+```
+[put image of nrow classzero]
+
+As can been seen from the above results the data is not equally distributed between classone
+and classzero i.e. there are more customers who have not taken a personal loan compared
+to the customers who took the personal loan. Since we would like to have unbiased results
+for our model we need to split the data in such a way that the ratio of 0 and 1 remains same
+in train and test dataset as it was in our original dataset.
+Now we would like to split our dataset to Train and Test. The Train dataset wuld be used to
+build the model and the Test would be used to validate how well our model is performing.
+The Train and Test dataset are created using the "sample" function. Since the sample
+function generates a random selection everytime it is executed, we would use "set.seed"
+function so that sample generated remains same everytime we run the code. This would help
+us in having consistent results. We split the classone and classzero dataset to train adn test
+respectively.
+
 #1's are less than 0's and while creating the test data our model could be
 #biased towards zero,so we have create a data train test 
-```{r}
-classone=loannew[t,]
-classzero=loannew[!t,]
-classzero
-```
+
 ```{r}
 set.seed(222)
 t=sample(1:nrow(classone),floor(0.5*nrow(classone)))
+length(t)
 ```
+[image of length of t1]
+
 ```{r}
 classone_train=classone[t,]
 classone_test=classone[-t,]
+```
+```{r}
+set.seed(222)
+t=sample(1:nrow(classzero),floor(0.5*nrow(classzero)))
+length(t)
+```
+[image of t2]
+```{r}
 classzero_train=classzero[t,]
 classzero_test=classzero[-t,]
-classone_train
 ```
-#training and test data for dependent and independent variable
+Now we create the train and test dataset for for the independent and dependent variables.
+xtrain & xtest would be the split for independent variables and ytrain & ytest would be the
+split for dependent variable i.e. Personal Loan.
+
 ```{r}
 PlIndex=which(names(loan) %in% "PersonalLoan")
+PlIndex
 ```
-#which func. gives the position where the
-#above condition satisfies here personalloan is 9th col. so PlIndex=9 
-```{r}
-View(PlIndex)
-```
+[put image of plindex]
+
 ```{r}
 Xtrain=rbind(classone_train[,-PlIndex],classzero_train[,-PlIndex])
 Xtest=rbind(classone_test[,-PlIndex],classzero_test[,-PlIndex])
 ytrain=c(classone_train[,PlIndex],classzero_train[,PlIndex])
 ytest= c(classone_test[,PlIndex],classzero_test[,PlIndex])
 ```
+# Model Building
+We are now ready to build our model. For performing logistic we would use the glm function
+with family="binomial". We would consider all the categorical variables as factor variables.
+
 ```{r}
 Mod=glm(ytrain~Age+Experience+Income+as.factor(Family)+CCAvg+as.factor(Education)+Mortgage+as.factor(SecuritiesAccount)+as.factor(CDAccount)+as.factor(Online)+as.factor(CreditCard),family=binomial,data=data.frame(Xtrain))
 summary(Mod)
 ```
+[put mod summary image]
+
+From the model we can see that the variables Age, Experience and Mortgage are not
+significant (since there are no stars displayed for these variables). We would remove these
+variables from our model and run it again.
+
 ```{r}
-Mod1=glm(ytrain~Age+Income+as.factor(Family)+as.factor(Education)+as.factor(SecuritiesAccount)+as.factor(CDAccount)+as.factor(Online)+as.factor(CreditCard),family=binomial,data=data.frame(Xtrain))
-summary(Mod1)
-```
-```{r}
-Mod2=Mod=glm(ytrain~Income+as.factor(Family)+as.factor(Education)+as.factor(CDAccount)+as.factor(Online),family=binomial,data=data.frame(Xtrain))
-sury=summary(Mod2)
+Mod1=glm(ytrain~Income+as.factor(Family)+CCAvg+as.factor(Education)+as.factor(SecuritiesAccount)+as.factor(CDAccount)+as.factor(Online)+as.factor(CreditCard),family=binomial,data=data.frame(Xtrain))
+sury=summary(Mod1)
 sury
 ```
+[put mod1 summary image]
+
+Now all the variables except as.Factor(Family2) in our model are significant and we cannot remove the `family` term in our model because the other parts of the family are significant. and hence we can go ahead with the next
+steps. A few checks before we go ahead with next steps is to see for how our residuals are.
+The summary of residuals shows that the median is -0.07 which is close to zero. Next the Null
+deviance and residual deviance need to be as far as possible from each other.The Null
+deviance indicates the deviance for a model without variables whereas the residual deviance
+is for our model. We can see that the Null deviance is 1550.95 whereas the residual deviance
+is 606.54 which clearly indicates that there is considerable difference between them. These
+two checks indicate that our model is good.
+The estimates obtained from this model are that of log odds. Interpreting these estimates
+directly would not make much sense. Taking exponential of the estimates would give us odds
+ratio which is more meaningful in interpreting.
+
 ```{r}
 IncomeEst=sury$coefficients["Income","Estimate"]
 (exp(IncomeEst)-1)*100
 ```
-#prediction
+[put exp image]
+
+For every unit increase in income the odds ratio i.e. the chances of taking the loan to not
+taking the loan increases by 6.47%. But in logistic the model performance is decided based
+on the classification table. The threshold considered is 0.5 to classify the probabilities given
+by the model i.e. probabilities less than 0.5 will become 0 and those greater would become
+1.
+
+# Prediction
 ```{r}
 PredTest=predict(Mod,newdata=data.frame(Xtest),type="response")
 classify=floor(PredTest+0.5)
 ClassifyTable=table(ytest,classify)
 ClassifyTable
+```
+[put classify image]
+```{r}
 classify1=floor(PredTest+0.6)
 ClassifyTable1=table(ytest,classify)
 ClassifyTable1
+```
+[put classify1 image]
+```
+```{r}
 classify2=floor(PredTest+0.4)
 ClassifyTable2=table(ytest,classify)
 ClassifyTable2
 ```
+[put classify2 image]
 ```{r}
 error=(ClassifyTable[1,2]+ClassifyTable[2,1])/length(PredTest)
 error*100
 ```
+[put original error image]
+The classifiation table (ClassifyTable) indicates that most of the classifications have been
+done properly and the error shows that there is 4.4% error in our model i.e 4.4% of
+missclassification.
+# Model Diagnostic
 ```{r}
-library(pscl)
+install.packages("pscl")
+pR2(Mod1)
+```
+[pR2 image]
+
+The Mc-Fadded R2 suggests that the independent variables are able to explain abour
+71.20% of the dependent variable.
+The next diagnostic to check is the ROC curve. This curve helps us in understanding how
+well our model is performing for each cut-off threshold.
+```{r}
 install.packages("ROCR")
 library(ROCR)
-pr<-prediction(PredTest,yTest)
-prf<-performance(pr,measure="tpr",x.measure)
+pr<-prediction(PredTest,ytest)
+>tpr= sensitivity , fpr= specificity
+prf<-performance(pr,measure="tpr",x.measure="fpr")
+plot(prf)
 ```
+[ROC image]
+In the ROC, the curve should be as close as possible to the y-axis i.e to the sensitivity. This
+indicates that sensitivity is high and sprcificity is low. In our model the curve is close to the
+y-axis indicating that our model is good and would be perform well on a new dataset
