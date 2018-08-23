@@ -1,4 +1,9 @@
-# Loan Prediction using Logistic Regression
+# Loan Prediction using Logistic Regression:
+
+I referred the following resources for understanding Logistic Regression and building model.
+* [UC Business Analytics R programming Guide](http://uc-r.github.io/)
+* [Introduction to Logistic Regression with R](http://www.dataperspective.info/2015/10/introduction-to-logistic-regression.html)
+* [Simple Guide to Logistic Regression in R](https://www.analyticsvidhya.com/blog/2015/11/beginners-guide-on-logistic-regression-in-r/)
 
 #### Logistic Regression is a classification algorithm and not a prediction algorithm. It is used to predict a binary outcome (1 / 0, Yes / No, True / False) given a set of independent variables. To represent binary / categorical outcome, we use dummy variables.Logistic Regression is a special case of Linear Regression when the outcome variable is categorical where we are using log of odds as dependent variable.In simple words it predicts the probability of occurrence of an event by fitting data to a logit function.
 
